@@ -2,16 +2,17 @@ package com.saharw.myfirstandenginegame;
 
 import android.view.KeyEvent;
 
+import com.saharw.myfirstandenginegame.scene.SplashScene;
+
 import org.andengine.engine.Engine;
 import org.andengine.engine.FixedStepEngine;
-import org.andengine.engine.LimitedFPSEngine;
-import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.Camera;
+import org.andengine.engine.handler.timer.ITimerCallback;
+import org.andengine.engine.handler.timer.TimerHandler;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.WakeLockOptions;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
-import org.andengine.engine.options.resolutionpolicy.RelativeResolutionPolicy;
 import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 
@@ -57,6 +58,13 @@ public class MainActivity extends BaseGameActivity {
 
     @Override
     public void onPopulateScene(Scene pScene, OnPopulateSceneCallback pOnPopulateSceneCallback) throws IOException {
+        mEngine.registerUpdateHandler(new TimerHandler(SplashScene.TIMER_INTERVAL_SECONDS, new ITimerCallback() {
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler) {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                SceneManager.getInstance().createMenuScene();
+            }
+        }));
         pOnPopulateSceneCallback.onPopulateSceneFinished();
     }
 

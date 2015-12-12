@@ -1,8 +1,10 @@
 package com.saharw.myfirstandenginegame;
 
 import com.saharw.myfirstandenginegame.scene.BaseScene;
+import com.saharw.myfirstandenginegame.scene.MainMenuScene;
 import com.saharw.myfirstandenginegame.scene.SplashScene;
 
+import org.andengine.engine.Engine;
 import org.andengine.ui.IGameInterface;
 
 /**
@@ -13,14 +15,22 @@ public class SceneManager {
     private static SceneManager sInstance = null;
 
     //============== SCENES ====================
-    private BaseScene currScene;
+    private BaseScene mCurrScene;
 
-    private BaseScene splashScene;
+    private BaseScene mSplashScene;
+    private BaseScene mMenuScene;
 
-    private SceneManager(){}
+    private SceneType mCurrSceneType;
+    private Engine mEngine;
+
+
+    private SceneManager(){
+        mEngine = ResourceManager.getInstance().engine;
+        mCurrSceneType = SceneType.SCENE_SPLASH;
+    }
 
     public enum SceneType {
-        SCENE_SPLASH
+        SCENE_MENU, SCENE_SPLASH
     }
 
     public static SceneManager getInstance(){
@@ -30,18 +40,42 @@ public class SceneManager {
         return sInstance;
     }
 
+    public void setScene(BaseScene scene)
+    {
+        mEngine.setScene(scene);
+        mCurrScene = scene;
+        mCurrSceneType = scene.getSceneType();
+    }
+
     public BaseScene getCurrentScene(){
-        return this.currScene;
+        return this.mCurrScene;
     }
 
     public SceneType getCurrentSceneType(){
         return getCurrentScene().getSceneType();
     }
 
+//========== Create & Dispose Scenes =======================
+    // splash scene
     public void createSplashScene(IGameInterface.OnCreateSceneCallback pOnCreateSceneCallback) {
         ResourceManager.getInstance().loadSplashSceneRes();
-        splashScene = new SplashScene();
-        currScene = splashScene;
-        pOnCreateSceneCallback.onCreateSceneFinished(splashScene);
+        mSplashScene = new SplashScene();
+        mCurrScene = mSplashScene;
+        pOnCreateSceneCallback.onCreateSceneFinished(mSplashScene);
+    }
+
+    public void disposeSplashScene(){
+        ResourceManager.getInstance().unloadSplashSceneRes();
+        mSplashScene.dispose(); // dispose scene entity itself
+        mSplashScene = null;
+    }
+
+    // menu scene
+    public void createMenuScene(){
+        ResourceManager.getInstance().loadMenuResources();
+        mMenuScene = new MainMenuScene();
+        //TODO: add loading scene
+        setScene(mMenuScene);
+        disposeSplashScene();
     }
 }

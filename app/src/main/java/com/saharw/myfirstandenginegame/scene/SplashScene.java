@@ -11,6 +11,7 @@ import org.andengine.opengl.util.GLState;
  */
 public class SplashScene extends BaseScene {
 
+    public static final float TIMER_INTERVAL_SECONDS = 3f;
     private Sprite mSplash;
 
     @Override
