@@ -1,6 +1,7 @@
 package com.saharw.myfirstandenginegame;
 
-import com.saharw.myfirstandenginegame.scene.BaseScene;
+import com.saharw.myfirstandenginegame.scene.GameScene;
+import com.saharw.myfirstandenginegame.scene.base.BaseScene;
 import com.saharw.myfirstandenginegame.scene.MainMenuScene;
 import com.saharw.myfirstandenginegame.scene.SplashScene;
 
@@ -19,6 +20,7 @@ public class SceneManager {
 
     private BaseScene mSplashScene;
     private BaseScene mMenuScene;
+    private BaseScene mGameScene;
 
     private SceneType mCurrSceneType;
     private Engine mEngine;
@@ -30,7 +32,9 @@ public class SceneManager {
     }
 
     public enum SceneType {
-        SCENE_MENU, SCENE_SPLASH
+        SCENE_MENU,
+        SCENE_SPLASH,
+        SCENE_GAME
     }
 
     public static SceneManager getInstance(){
@@ -66,16 +70,38 @@ public class SceneManager {
 
     public void disposeSplashScene(){
         ResourceManager.getInstance().unloadSplashSceneRes();
-        mSplashScene.dispose(); // dispose scene entity itself
-        mSplashScene = null;
+        if(mSplashScene != null) {
+            mSplashScene.dispose(); // dispose scene entity itself
+            mSplashScene = null;
+        }
     }
 
     // menu scene
     public void createMenuScene(){
         ResourceManager.getInstance().loadMenuResources();
         mMenuScene = new MainMenuScene();
-        //TODO: add loading scene
         setScene(mMenuScene);
         disposeSplashScene();
+    }
+
+    public void disposeMenuScene(){
+        ResourceManager.getInstance().unloadMenuResources();
+        mMenuScene.dispose();
+        mMenuScene = null;
+    }
+
+    // game scene
+    public void createGameScene(){
+        //load resources
+        ResourceManager.getInstance().loadGameSceneRes();
+        mGameScene = new GameScene();
+        setScene(mGameScene);
+        disposeMenuScene();
+    }
+
+    public void disposeGameScene(){
+        ResourceManager.getInstance().unloadGameSceneRes();
+        mGameScene.dispose();
+        mGameScene = null;
     }
 }

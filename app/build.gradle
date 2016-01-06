@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile project(':andEngine')
     compile project(':andEnginePhysicsBox2DExtension')
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

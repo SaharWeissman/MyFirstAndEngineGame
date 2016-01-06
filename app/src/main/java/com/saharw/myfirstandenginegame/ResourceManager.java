@@ -26,6 +26,7 @@ public class ResourceManager {
 
     private static final String GFX_BASE_DIR = "gfx/";
     private static final String GFX_MENU_DIR = "menu/";
+    private static final String GFX_GAME_DIR = "game/";
     private String FONT_BASE_DIR = "font/";
 
     private static final int SPLASH_BITMAP_TEXTURE_ATLAS_SIDE_SIZE = 256;
@@ -52,6 +53,11 @@ public class ResourceManager {
     public ITextureRegion btnNewGameRegion;
     public ITextureRegion btnContinueGameRegion;
     public ITextureRegion btnOptionsRegion;
+
+    // game scene
+    private BitmapTextureAtlas gameSceneTextureAtlas;
+    public ITextureRegion gameSceneBckgdTextureRegion;
+    public ITextureRegion gameRightControllerTextureRegion;
 
     private ResourceManager(){}
 
@@ -90,6 +96,27 @@ public class ResourceManager {
         loadMenuAudio();
         loadMenuFonts();
     }
+
+    public void unloadMenuResources(){
+        unloadMenuGfx();
+        unloadMenuAudio();
+        unloadMenuFonts();
+    }
+
+    // load game scene
+    public void loadGameSceneRes() {
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GFX_BASE_DIR + GFX_GAME_DIR);
+        gameSceneTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1000, 350, TextureOptions.BILINEAR);
+        gameSceneBckgdTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneTextureAtlas, activity, "hill.png", 0 ,0);
+        gameRightControllerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneTextureAtlas, activity, "right_arrow.png", 800, 150);
+        gameSceneTextureAtlas.load();
+    }
+
+    public void unloadGameSceneRes() {
+        gameSceneTextureAtlas.unload();
+        gameSceneBckgdTextureRegion = null;
+        gameRightControllerTextureRegion = null;
+    }
 //=====================/ load & unload scenes resources ====================
 
 //==================== private / helper methods =============================
@@ -120,5 +147,26 @@ public class ResourceManager {
         menuFont = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font3.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
         menuFont.load();
     }
+
+
+    private void unloadMenuGfx() {
+        menuTextureAtlas.unload();
+        menuBckgdRegion = null;
+        btnContinueGameRegion = null;
+        btnNewGameRegion = null;
+        btnOptionsRegion = null;
+    }
+
+
+    private void unloadMenuAudio() {
+        // TODO:
+    }
+
+
+    private void unloadMenuFonts() {
+        menuFont.unload();
+        menuFont = null;
+    }
+
 //==================== /private / helper methods =============================
 }

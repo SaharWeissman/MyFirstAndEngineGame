@@ -1,6 +1,7 @@
 package com.saharw.myfirstandenginegame.scene;
 
 import com.saharw.myfirstandenginegame.SceneManager;
+import com.saharw.myfirstandenginegame.scene.base.BaseScene;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.sprite.Sprite;

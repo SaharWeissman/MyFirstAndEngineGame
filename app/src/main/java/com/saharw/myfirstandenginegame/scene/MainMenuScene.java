@@ -3,6 +3,7 @@ package com.saharw.myfirstandenginegame.scene;
 import android.util.Log;
 
 import com.saharw.myfirstandenginegame.SceneManager;
+import com.saharw.myfirstandenginegame.scene.base.BaseScene;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.scene.menu.MenuScene;
@@ -93,6 +94,7 @@ public class MainMenuScene extends BaseScene implements MenuScene.IOnMenuItemCli
         switch (pMenuItem.getID()){
             case MENU_NEW_GAME:{
                 Log.d(TAG, "onMenuItemClicked: case MENU_NEW_GAME");
+                SceneManager.getInstance().createGameScene();
                 break;
             }
             case MENU_CONTINUE_GAME:{
