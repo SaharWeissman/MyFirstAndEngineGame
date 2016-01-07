@@ -16,8 +16,10 @@ import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSourc
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.ui.activity.BaseGameActivity;
+import org.andengine.util.debug.Debug;
 
 /**
  * Created by Sahar on 12/05/2015.
@@ -55,9 +57,11 @@ public class ResourceManager {
     public ITextureRegion btnOptionsRegion;
 
     // game scene
-    private BitmapTextureAtlas gameSceneTextureAtlas;
+    private BuildableBitmapTextureAtlas gameSceneBackgdTextureAtlas;
     public ITextureRegion gameSceneBckgdTextureRegion;
     public ITextureRegion gameRightControllerTextureRegion;
+    public ITextureRegion gameSceneFloorTextureRegion;
+    public ITiledTextureRegion gameScenePlayerTextureRegion;
 
     private ResourceManager(){}
 
@@ -106,14 +110,27 @@ public class ResourceManager {
     // load game scene
     public void loadGameSceneRes() {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath(GFX_BASE_DIR + GFX_GAME_DIR);
-        gameSceneTextureAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 1000, 350, TextureOptions.BILINEAR);
-        gameSceneBckgdTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneTextureAtlas, activity, "hill.png", 0 ,0);
-        gameRightControllerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneTextureAtlas, activity, "right_arrow.png", 800, 150);
-        gameSceneTextureAtlas.load();
+
+        // background
+        gameSceneBackgdTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 2048, 2048, TextureOptions.BILINEAR);
+        gameSceneBckgdTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneBackgdTextureAtlas, activity, "hill.png");
+        gameRightControllerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneBackgdTextureAtlas, activity, "right_arrow.png");
+        gameSceneFloorTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameSceneBackgdTextureAtlas, activity, "floor.png");
+
+
+        // game character
+        gameScenePlayerTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameSceneBackgdTextureAtlas, activity, "player_walking_animate.png", 5, 1);
+
+        try {
+            gameSceneBackgdTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+            gameSceneBackgdTextureAtlas.load();
+        } catch (ITextureAtlasBuilder.TextureAtlasBuilderException e) {
+            Debug.e(e);
+        }
     }
 
     public void unloadGameSceneRes() {
-        gameSceneTextureAtlas.unload();
+        gameSceneBackgdTextureAtlas.unload();
         gameSceneBckgdTextureRegion = null;
         gameRightControllerTextureRegion = null;
     }
